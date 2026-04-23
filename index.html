@@ -1,59 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="mn">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
-    <link rel="manifest" href="manifest.json">
     <style>
-        body { text-align: center; background: #000; color: #fff; }
-        canvas { border: 1px solid #fff; display: block; margin: 0 auto; }
+        body { 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            height: 100vh; margin: 0; background-color: #000; color: white; font-family: Arial; 
+        }
+        canvas { border: 2px solid white; background-color: #111; }
+        h3 { margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <h1>Snake Game</h1>
+    <h3>Snake Game</h3>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        let snake = [{x: 10, y: 10}];
-        let food = {x: 15, y: 15};
-        let dx = 0, dy = 0;
+
+        let snake = [{x: 200, y: 200}];
+        let food = {x: 100, y: 100};
+        let dx = 20, dy = 0;
 
         function draw() {
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = "lime";
-            snake.forEach(part => ctx.fillRect(part.x * 20, part.y * 20, 18, 18));
-            
-            ctx.fillStyle = "red";
-            ctx.fillRect(food.x * 20, food.y * 20, 18, 18);
-        }
 
-        function update() {
-            let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            // Хоол
+            ctx.fillStyle = "red";
+            ctx.fillRect(food.x, food.y, 20, 20);
+
+            // Могой
+            ctx.fillStyle = "lime";
+            snake.forEach(part => ctx.fillRect(part.x, part.y, 20, 20));
+
+            // Хөдөлгөөн
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
             snake.unshift(head);
+
             if (head.x === food.x && head.y === food.y) {
-                food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)};
+                food = {x: Math.floor(Math.random()*20)*20, y: Math.floor(Math.random()*20)*20};
             } else {
                 snake.pop();
             }
+
+            // Мөргөлдөх
+            if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
+                alert("Game Over!");
+                snake = [{x: 200, y: 200}];
+                dx = 20; dy = 0;
+            }
         }
 
-        setInterval(() => { update(); draw(); }, 100);
-        document.onkeydown = (e) => {
-            if(e.key === "ArrowUp") { dx=0; dy=-1; }
-            if(e.key === "ArrowDown") { dx=0; dy=1; }
-            if(e.key === "ArrowLeft") { dx=-1; dy=0; }
-            if(e.key === "ArrowRight") { dx=1; dy=0; }
-        };
-    </script>
-    
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -20; }
+            if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 20; }
+            if (e.key === "ArrowLeft" && dx === 0) { dx = -20; dy = 0; }
+            if (e.key === "ArrowRight" && dx === 0) { dx = 20; dy = 0; }
+        });
+
+        setInterval(draw, 150);
     </script>
 </body>
 </html>
+            
