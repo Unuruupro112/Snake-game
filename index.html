@@ -1,69 +1,55 @@
-<!DOCTYPE html>
+            <!DOCTYPE html>
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <style>
-        body { 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            height: 100vh; margin: 0; background-color: #000; color: white; font-family: Arial; 
-        }
-        canvas { border: 2px solid white; background-color: #111; }
-        h3 { margin-bottom: 10px; }
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #000; color: white; margin: 0; }
+        canvas { border: 2px solid white; background: #111; max-width: 90vw; }
+        .controls { display: grid; grid-template-columns: repeat(3, 60px); gap: 10px; margin-top: 20px; }
+        button { padding: 20px; font-size: 20px; border-radius: 10px; border: none; background: #444; color: white; }
     </style>
 </head>
 <body>
     <h3>Snake Game</h3>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="controls">
+        <div></div><button onclick="changeDir('UP')">▲</button><div></div>
+        <button onclick="changeDir('LEFT')">◀</button>
+        <button onclick="changeDir('DOWN')">▼</button>
+        <button onclick="changeDir('RIGHT')">▶</button>
+    </div>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
+        let snake = [{x: 200, y: 200}], food = {x: 100, y: 100}, dx = 20, dy = 0;
 
-        let snake = [{x: 200, y: 200}];
-        let food = {x: 100, y: 100};
-        let dx = 20, dy = 0;
-
-        function draw() {
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Хоол
-            ctx.fillStyle = "red";
-            ctx.fillRect(food.x, food.y, 20, 20);
-
-            // Могой
-            ctx.fillStyle = "lime";
-            snake.forEach(part => ctx.fillRect(part.x, part.y, 20, 20));
-
-            // Хөдөлгөөн
-            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-            snake.unshift(head);
-
-            if (head.x === food.x && head.y === food.y) {
-                food = {x: Math.floor(Math.random()*20)*20, y: Math.floor(Math.random()*20)*20};
-            } else {
-                snake.pop();
-            }
-
-            // Мөргөлдөх
-            if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
-                alert("Game Over!");
-                snake = [{x: 200, y: 200}];
-                dx = 20; dy = 0;
-            }
+        function changeDir(dir) {
+            if (dir === 'UP' && dy === 0) { dx = 0; dy = -20; }
+            if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 20; }
+            if (dir === 'LEFT' && dx === 0) { dx = -20; dy = 0; }
+            if (dir === 'RIGHT' && dx === 0) { dx = 20; dy = 0; }
         }
 
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -20; }
-            if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = 20; }
-            if (e.key === "ArrowLeft" && dx === 0) { dx = -20; dy = 0; }
-            if (e.key === "ArrowRight" && dx === 0) { dx = 20; dy = 0; }
-        });
+        function draw() {
+            ctx.fillStyle = "black"; ctx.fillRect(0, 0, 400, 400);
+            ctx.fillStyle = "red"; ctx.fillRect(food.x, food.y, 20, 20);
+            ctx.fillStyle = "lime";
+            snake.forEach(p => ctx.fillRect(p.x, p.y, 20, 20));
 
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            snake.unshift(head);
+            if (head.x === food.x && head.y === food.y) {
+                food = {x: Math.floor(Math.random()*20)*20, y: Math.floor(Math.random()*20)*20};
+            } else { snake.pop(); }
+            
+            if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
+                alert("Game Over!"); snake = [{x: 200, y: 200}]; dx = 20; dy = 0;
+            }
+        }
         setInterval(draw, 150);
     </script>
 </body>
 </html>
-            
