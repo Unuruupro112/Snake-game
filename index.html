@@ -1,11 +1,12 @@
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="mn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #000; color: white; margin: 0; }
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #000; color: white; margin: 0; font-family: Arial; }
         canvas { border: 2px solid white; background: #111; max-width: 90vw; }
         .controls { display: grid; grid-template-columns: repeat(3, 60px); gap: 10px; margin-top: 20px; }
         button { padding: 20px; font-size: 20px; border-radius: 10px; border: none; background: #444; color: white; }
@@ -50,6 +51,10 @@
             }
         }
         setInterval(draw, 150);
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
     </script>
 </body>
 </html>
